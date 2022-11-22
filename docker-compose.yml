@@ -1,0 +1,23 @@
+services:
+  'kotlin-spring-sample':
+    image: app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build: .
+    ports:
+      - 8080:8080
+  postgres:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root"]
+      interval: '5s'
+      start_period: '5s'
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
